@@ -1,19 +1,25 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width" />
-        <title>Userpage of {{ user.username }}</title>
-    </head>
-    <body>
-        <p>
-            List of messages posted by {{ user.username }}
-        </p>
-        <ul>
-            {% for post in posts %}
-                <li>{{ post.title }}: {{ post.contents }}</li>
-            {% endfor %}
-        </ul>
-        <p><a href="/">Home</a></p>
-    </body>
-</html>
+{% extends "layout.html" %}
+
+{% block title %}
+Userpage of {{ user.username }}
+{% endblock %}
+
+{% block body %}
+<p>
+    List of messages posted by {{ user.username }}
+</p>
+<ul>
+    {% for post in posts %}
+        <li>{{ post.title }}: {{ post.contents }}
+            {% if session["username"] and session["username"] == user.username %} - <a href="/remove/{{ post.id }}/">remove</a> -
+            <a href="/user/{{ user.id }}/post/{{ post.id }}/">edit</a>{% endif %}
+        </li>
+    {% endfor %}
+</ul>
+{% if session["username"] and session["username"] == user.username %}
+    <p>
+        <a href="/user/{{ user.id }}/post/">Post a message</a>
+    </p>
+{% endif %}
+<p><a href="/">Home</a></p>
+{% endblock %}

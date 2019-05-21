@@ -1,27 +1,23 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width" />
-        <title>Index</title>
-    </head>
-    <body>
-        <p>
-            Index
-        </p>
-        {% if session["username"] %}
-        Hello {{ session["username"] }}
-        <ul>
-            {% if user %}<li><a href="/user/{{ user.id }}/post/">Post a message</a></li>{% endif %}
-            <li><a href="/users/">List of users</a></li>
-            <li><a href="/logout/">Logout</a></li>
-        </ul>
-        {% else %}
-        <ul>
-            <li><a href="/register/">Register</a></li>
-            <li><a href="/login/">Login</a></li>
-            <li><a href="/users/">List of users</a></li>
-        </ul>
-        {% endif %}
-    </body>
-</html>
+{% extends "layout.html" %}
+
+{% block title %}Index{% endblock %}
+
+{% block body %}
+<p>
+    Index
+</p>
+{% if session["username"] %}
+Hello {{ session["username"] }}
+<ul>
+    {% if user %}<li><a href="/user/{{ user.id }}/">Personal page</a></li>{% endif %}
+    <li><a href="/users/">List of users</a></li>
+    <li><a href="/logout/">Logout</a></li>
+</ul>
+{% else %}
+<ul>
+    <li><a href="/register/">Register</a></li>
+    <li><a href="/login/">Login</a></li>
+    <li><a href="/users/">List of users</a></li>
+</ul>
+{% endif %}
+{% endblock %}

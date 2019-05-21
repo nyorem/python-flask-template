@@ -1,27 +1,22 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width" />
-        <title>Post</title>
-    </head>
-    <body>
-        <div class="container">
-            <form method="post">
-                <label for="title"><strong>Title</strong></label>
-                <input type="text" name="title" required>
+{% extends "layout.html" %}
 
-                <br>
-                <label for="contents"><strong>Contents</strong></label>
-                <br>
-                <textarea name="contents" rows=10 cols=30></textarea>
+{% block title %}Post{% endblock %}
 
-                <button type="submit">Post</button>
-            </form>
-        </div>
+{% block body %}
+<div class="container">
+    <form method="post">
+        <label for="title"><strong>Title</strong></label>
+        <input type="text" name="title" {% if title %}value="{{ title }}"{% endif %}required>
 
-        <p>
-            <a href="/">Home</a>
-        </p>
-    </body>
-</html>
+        <br>
+        <label for="contents"><strong>Contents</strong></label>
+        <br>
+        <textarea name="contents" rows=10 cols=30>{% if contents %}{{ contents }}{% endif %}</textarea>
+
+        <button type="submit">Post</button>
+    </form>
+</div>
+<p>
+    <a href="/">Home</a>
+</p>
+{% endblock %}

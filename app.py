@@ -108,9 +108,11 @@ def user(user_id):
     posts = user.posts
     return render_template("user.html", user=user, posts=posts)
 
-@app.route("/user/<int:user_id>/post/", methods=["GET", "POST"])
+# TODO: check if user_id corresponds to session or directly use session
+@app.route("/user/<int:user_id>/post/", defaults = { "post_id": None }, methods=["GET", "POST"])
+@app.route("/user/<int:user_id>/post/<int:post_id>/", methods=["GET", "POST"])
 @login_required
-def post(user_id):
+def post(user_id, post_id=None):
     user = User.query.get(user_id)
     if user is None:
         abort(404)
@@ -119,13 +121,49 @@ def post(user_id):
         form = request.form
         title = form["title"]
         contents = form["contents"]
-        post = Post(title=title, contents=contents)
-        user.posts.append(post)
-        db.session.add(post)
+
+        if post_id is None:
+            # new post
+            post = Post(title=title, contents=contents)
+            user.posts.append(post)
+            db.session.add(post)
+        else:
+            # update post
+            post = Post.query.get(post_id)
+            if post is None:
+                abort(404)
+            post.title = form["title"]
+            post.contents = form["contents"]
+
         db.session.commit()
 
         return redirect(url_for("user", user_id=user.id))
+
+    if post_id is not None:
+        post = Post.query.get(post_id)
+        if post is None:
+            abort(404)
+        return render_template("post.html", title=post.title, contents=post.contents)
+
     return render_template("post.html")
+
+# TODO: check if user_id corresponds to session or directly use session
+@app.route("/remove/<int:post_id>/")
+@login_required
+def remove(post_id):
+    post = Post.query.get(post_id)
+    if post is None:
+        abort(404)
+    username = session["username"]
+    user_id = post.user_id
+    user = User.query.get(user_id)
+    if user is None:
+        abort(404)
+    if username != user.username:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect(url_for("user", user_id=user_id))
 
 @app.route("/")
 def index():
