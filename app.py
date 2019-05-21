@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 from functools import wraps
 from flask import Flask, render_template, abort, session, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
@@ -14,6 +16,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
+    posts = db.relationship("Post", backref="user", lazy="dynamic")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -32,6 +35,12 @@ class User(db.Model):
         if password is None:
             return True
         return user.check_password(password)
+
+class Post(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64), index=True, unique=False, nullable=False)
+    contents = db.Column(db.String(200), index=True, unique=False, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
 def login_required(f):
     @wraps(f)
@@ -86,19 +95,49 @@ def logout():
     session.pop("username", None)
     return redirect(url_for("index"))
 
-# TODO
+@app.route("/users/")
+def users():
+    users = User.query.all()
+    return render_template("users.html", users=users)
+
 @app.route("/user/<int:user_id>/")
-@login_required
 def user(user_id):
-    abort(404)
+    user = User.query.get(user_id)
+    if user is None:
+        abort(404)
+    posts = user.posts
+    return render_template("user.html", user=user, posts=posts)
+
+@app.route("/user/<int:user_id>/post/", methods=["GET", "POST"])
+@login_required
+def post(user_id):
+    user = User.query.get(user_id)
+    if user is None:
+        abort(404)
+
+    if request.method == "POST":
+        form = request.form
+        title = form["title"]
+        contents = form["contents"]
+        post = Post(title=title, contents=contents)
+        user.posts.append(post)
+        db.session.add(post)
+        db.session.commit()
+
+        return redirect(url_for("user", user_id=user.id))
+    return render_template("post.html")
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    username = session.get("username", None)
+    user = None
+    if username is not None:
+        user = User.query.filter_by(username=username).first()
+    return render_template("index.html", user=user)
 
 @app.shell_context_processor
 def make_shell_context():
-    return { "db": db, "User": User }
+    return { "db": db, "User": User, "Post": Post }
 
 if __name__ == "__main__":
     app.run()

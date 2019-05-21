@@ -12,12 +12,15 @@
         {% if session["username"] %}
         Hello {{ session["username"] }}
         <ul>
+            {% if user %}<li><a href="/user/{{ user.id }}/post/">Post a message</a></li>{% endif %}
+            <li><a href="/users/">List of users</a></li>
             <li><a href="/logout/">Logout</a></li>
         </ul>
         {% else %}
         <ul>
             <li><a href="/register/">Register</a></li>
             <li><a href="/login/">Login</a></li>
+            <li><a href="/users/">List of users</a></li>
         </ul>
         {% endif %}
     </body>

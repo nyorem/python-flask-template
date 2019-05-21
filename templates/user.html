@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <title>Userpage of {{ user.username }}</title>
+    </head>
+    <body>
+        <p>
+            List of messages posted by {{ user.username }}
+        </p>
+        <ul>
+            {% for post in posts %}
+                <li>{{ post.title }}: {{ post.contents }}</li>
+            {% endfor %}
+        </ul>
+        <p><a href="/">Home</a></p>
+    </body>
+</html>
