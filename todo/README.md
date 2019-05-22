@@ -1,7 +1,7 @@
 # TODO
 
-- update post
-- remove post
+- CRUD
+- Testing
 
 # References
 

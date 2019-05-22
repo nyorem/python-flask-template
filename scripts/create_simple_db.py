@@ -1,5 +1,8 @@
 #! /usr/bin/env python3
 
+import sys
+sys.path.append(".")
+
 from app import db, User, Post
 
 # db.drop_all()

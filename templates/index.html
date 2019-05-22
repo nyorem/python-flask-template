@@ -6,8 +6,8 @@
 <p>
     Index
 </p>
-{% if session["username"] %}
-Hello {{ session["username"] }}
+{% if user %}
+Hello {{ user.username }}
 <ul>
     {% if user %}<li><a href="/user/{{ user.id }}/">Personal page</a></li>{% endif %}
     <li><a href="/users/">List of users</a></li>

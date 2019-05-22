@@ -9,7 +9,7 @@ Userpage of {{ user.username }}
     List of messages posted by {{ user.username }}
 </p>
 <ul>
-    {% for post in posts %}
+    {% for post in user.posts %}
         <li>{{ post.title }}: {{ post.contents }}
             {% if session["username"] and session["username"] == user.username %} - <a href="/remove/{{ post.id }}/">remove</a> -
             <a href="/user/{{ user.id }}/post/{{ post.id }}/">edit</a>{% endif %}
