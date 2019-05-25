@@ -1,3 +1,13 @@
+.*.swp
+
 venv
-__pycache__
+
+*.pyc
+__pycache__/
+
 instance/
+
+dist/
+build/
+*.egg-info/
+.coverage

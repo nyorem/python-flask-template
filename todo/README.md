@@ -2,6 +2,8 @@
 
 - CRUD
 - Testing
+- Bootstrap
+- flask_login
 
 # References
 

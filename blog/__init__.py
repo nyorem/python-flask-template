@@ -25,7 +25,7 @@ def create_app(test_config=None):
     )
 
     if test_config is not None:
-        app.config.from_mapping(test_config)
+        app.config.from_mapping(test_config, silent=True)
 
     db.init_app(app)
 
