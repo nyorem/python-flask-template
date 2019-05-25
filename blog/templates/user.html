@@ -11,15 +11,15 @@ Userpage of {{ user.username }}
 <ul>
     {% for post in user.posts %}
         <li>{{ post.title }}: {{ post.contents }}
-            {% if session["username"] and session["username"] == user.username %} - <a href="/remove/{{ post.id }}/">remove</a> -
-            <a href="/user/{{ user.id }}/post/{{ post.id }}/">edit</a>{% endif %}
+            {% if g.user and g.user.id == user.id %} - <a href="{{ url_for('blog.remove', post_id=post.id) }}">remove</a> -
+            <a href="{{ url_for('blog.post', post_id=post.id) }}">edit</a>{% endif %}
         </li>
     {% endfor %}
 </ul>
-{% if session["username"] and session["username"] == user.username %}
+{% if g.user and g.user.id == user.id %}
     <p>
-        <a href="/user/{{ user.id }}/post/">Post a message</a>
+        <a href="{{ url_for('blog.post') }}">Post a message</a>
     </p>
 {% endif %}
-<p><a href="/">Home</a></p>
+<p><a href="{{ url_for('blog.index') }}">Home</a></p>
 {% endblock %}
