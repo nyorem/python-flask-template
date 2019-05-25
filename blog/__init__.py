@@ -4,7 +4,17 @@ import os
 from flask import Flask, render_template, abort, session, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
 
+import click
+from flask.cli import with_appcontext
+
 db = SQLAlchemy()
+
+@click.command("init-db")
+@with_appcontext
+def init_db_command():
+    """Initializes the database."""
+    db.create_all()
+    click.echo("Database initialized")
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -24,6 +34,8 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    app.cli.add_command(init_db_command)
 
     # Register blueprints
     from .views import bp as blog_bp
