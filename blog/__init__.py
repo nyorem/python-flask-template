@@ -3,11 +3,13 @@
 import os
 from flask import Flask, render_template, abort, session, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_bootstrap import Bootstrap
 
 import click
 from flask.cli import with_appcontext
 
 db = SQLAlchemy()
+bootstrap = Bootstrap()
 
 @click.command("init-db")
 @with_appcontext
@@ -27,7 +29,9 @@ def create_app(test_config=None):
     if test_config is not None:
         app.config.from_mapping(test_config, silent=True)
 
+    # initialize extensions
     db.init_app(app)
+    bootstrap.init_app(app)
 
     # ensure the instance folder exists
     try:
