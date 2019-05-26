@@ -44,6 +44,9 @@ def create_app(test_config=None):
     from .auth import bp as auth_bp
     app.register_blueprint(auth_bp)
 
+    from .rest import bp as rest_bp
+    app.register_blueprint(rest_bp)
+
     return app
 
 app = create_app()

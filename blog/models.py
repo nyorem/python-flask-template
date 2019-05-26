@@ -25,9 +25,31 @@ class User(db.Model):
             return True
         return user.check_password(password)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "posts": dict([ (post.id, post.api_uri()) for post in self.posts ]),
+            "uri": self.api_uri(),
+        }
+
+    def api_uri(self):
+        return "/api/user/{}/".format(self.id)
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(64), index=True, unique=False, nullable=False)
     contents = db.Column(db.String(200), index=True, unique=False, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "contents": self.contents,
+            "owner": self.user_id,
+            "uri": self.api_uri(),
+        }
+
+    def api_uri(self):
+        return "/api/post/{}/".format(self.id)

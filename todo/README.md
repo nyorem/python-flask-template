@@ -1,7 +1,7 @@
 # TODO
 
-- CRUD
-- Testing
+- CRUD (simple version done)
+- Testing (simple version done)
 - Bootstrap
 - flask_login
 
